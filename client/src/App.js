@@ -14,17 +14,17 @@ function App() {
 
         <div className='menu'>
           {
-          categories.map(category => {
-            return <Link key={category} to={'/' + category}>{category}</Link> //Create link to each categorys own "page". 
+          categories.map((category, index) => {
+            return <Link key={index} to={'/' + category}>{category}</Link> //Create link to each categorys own "page". 
           })}
         </div>
 
         <Switch>
           {
-          categories.map(category => { //Map categories to routes. 
+          categories.map((category, index) => { //Map categories to routes. 
             return (
             <Route path={'/' + category}>
-              <Category name={category}/>
+              <Category key={index} name={category}/>
             </Route>)
           })}
         </Switch>
