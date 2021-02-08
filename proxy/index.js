@@ -1,11 +1,12 @@
 const express = require('express')
-const fetch = require('node-fetch')
+
+const logger = require('./utils/logger')
+const loader = require('./dataHandlers/loader')
+const tracker = require('./dataHandlers/data-tracker')
 
 const PORT = process.env.PORT || 5000
 
 const app = express()
-
-const url = 'https://bad-api-assignment.reaktor.com/v2/products/'
 
 //Apply Access-Control-Allow-Origin: * to every response. 
 app.use((req, res, next) => {
@@ -14,12 +15,24 @@ app.use((req, res, next) => {
 })
 
 app.get('/:category', (req, res) => {
-    console.log('Received GET request to /' + req.params.category)
-    
-    fetch(url + req.params.category)
-        .then(response => response.json())
-        .then(json => res.send(json))
+
+    const category = req.params.category
+
+    logger.req(req)
+
+    loader.getCategory(category)
+        .then(data => {
+            res.send(data)
+            logger.info('Data sent succesfully')
+        })
+        .catch(err => {
+            res.status(503).send('Error: Could not fetch data for ' + category + '. Server probably can not reach the APIs.')
+        })
+
 })
 
+//When the server has been running for twenty seconds begin to update data. 
+setTimeout(tracker.update, 20000)
+
 app.listen(PORT)
-console.log('Server running on port ' + PORT)
+logger.run(PORT)
