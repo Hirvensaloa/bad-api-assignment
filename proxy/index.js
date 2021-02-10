@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000
 
 const app = express()
 
-app.use(express.static('build'))
+app.use(express.static('client/build'))
 
 //Apply Access-Control-Allow-Origin: * to every response. 
 app.use((req, res, next) => {
