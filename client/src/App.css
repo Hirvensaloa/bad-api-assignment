@@ -1,4 +1,19 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
+.header {
+  position: fixed;
+  top: 0px;  
+  width: 36vw;
+  height: 15vh;
+  padding: 0vh 32vw 0vh 32vw; 
+  display: flex; 
+  justify-content: space-around;
+  align-items: center; 
+  z-index: 1;
+  background-color: white;
+}

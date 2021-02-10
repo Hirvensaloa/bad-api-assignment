@@ -1,8 +1,11 @@
 import React from 'react'
-import {BrowserRouter as Router, Switch, Link, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import '@fontsource/roboto/300.css'
+
 import './App.css'
 
 import Category from './components/category'
+import Header from './components/header'
 
 function App() {
 
@@ -10,26 +13,21 @@ function App() {
   const categories = ['beanies', 'facemasks', 'gloves']
 
   return (
+    <div className='App'>
       <Router>
-
-        <div className='menu'>
-          {
-          categories.map((category, index) => {
-            return <Link key={index} to={'/' + category}>{category}</Link> //Create link to each categorys own "page". 
-          })}
-        </div>
-
+        <Header categories={categories} />
         <Switch>
           {
           categories.map((category, index) => { //Map categories to routes. 
             return (
-            <Route path={'/' + category}>
-              <Category key={index} name={category}/>
+            <Route key={index} path={'/' + category}> 
+              <Category name={category}/>
             </Route>)
           })}
         </Switch>
         
       </Router>
+    </div>
   );
 }
 
