@@ -17,9 +17,19 @@ const addManufacturer = (manufacturer, data) => {
 
     for(i = 0; i < data.length; i++) {
 
-        //If DATAPAYLOAD contains word OUTOF, we can determine that item is OUT-OF-STOCK. 
-        const available = data[i].DATAPAYLOAD.search('OUTOF') === -1 ? true : false
-        map.set(data[i].id.toLowerCase(), available)
+        //Check what string DATAPAYLOAD contains and determine availability of item. 
+        const available = () => {
+            const str = data[i].DATAPAYLOAD
+
+            if(str.search('OUT') !== -1)
+                return 'out-of-stock'
+            else if(str.search('LESS') !== -1)
+                return 'less than 10'
+            else 
+                return 'instock'
+        }
+
+        map.set(data[i].id.toLowerCase(), available())
     }
 
     manufacturerMap.set(manufacturer, map)
