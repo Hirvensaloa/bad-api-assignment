@@ -7,7 +7,7 @@ const Header = ({categories}) => {
     return(
         <div className='header'>
           {categories.map((category, index) => { //Create link to each categorys own "page". 
-            return <Link key={index} to={'/' + category}>
+            return <Link className='link' key={index} to={'/' + category}>
                       {<Button variant='outlined' size='large' >{category}</Button>}
                    </Link> 
           })}
