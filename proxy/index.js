@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 
 const logger = require('./utils/logger')
 const loader = require('./dataHandlers/loader')
@@ -9,6 +10,14 @@ const PORT = process.env.PORT || 5000
 const app = express()
 
 app.use(express.static('client/build'))
+
+/*Every get request to /:category returns the index.html.
+This is done to work with React router's paths. Otherwise when reloading
+pages on front end, it would just sent requests to server and it cant answer. 
+*/
+app.get('/:category', (req, res) => {
+    res.sendFile('index.html', {root: path.join(__dirname, '../client/build/')})
+})
 
 //Apply Access-Control-Allow-Origin: * to every response. 
 app.use((req, res, next) => {
