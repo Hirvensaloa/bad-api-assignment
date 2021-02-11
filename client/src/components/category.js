@@ -19,7 +19,7 @@ const Category = ({name}) => {
 
         console.log('Fetching data from: /' + name)
     
-        axios.get(name)
+        axios.get(`/categories/${name}`)
             .then(response => {
                 console.log('Succesfully fetched data from: /' + name)
                 setItems(response.data)
@@ -27,7 +27,7 @@ const Category = ({name}) => {
             })
             .catch(error => {
                 console.log(error)
-                if(error.response.status === 503) //Server responds with 503, if it could not reach the APIs or parsing data threw error. 
+                if(typeof(error.response) !== 'undefined' && error.response.status === 503) //Server responds with 503, if it could not reach the APIs or parsing data threw error. 
                     setErrorMsg(error.response.data)
                 else
                     setErrorMsg('Failed to get data from: /' + name)
@@ -42,7 +42,7 @@ const Category = ({name}) => {
         if(errorMsg !== '') {
             return (
             <Alert className='error' severity='error'>
-                {errorMsg + ' - try again by refreshing the page!'}
+                {errorMsg + ' - try to refresh the page!'}
             </Alert>
             )
         } else if (items.length !== 0){ 

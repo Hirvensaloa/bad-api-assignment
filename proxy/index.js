@@ -16,7 +16,7 @@ app.use((req, res, next) => {
     next()
 })
 
-app.get('/:category', (req, res) => {
+app.get('/categories/:category', (req, res) => {
 
     const category = req.params.category
 
