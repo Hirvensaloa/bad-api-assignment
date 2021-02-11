@@ -24,7 +24,7 @@ Proxy server does most of the heavy lifting. It is used to cache the data from t
 
 ### UI
 
-UI implements a header which has buttons for each category available. Clicking a button renders a category component which then renders items to display. To render items fast, I have implemented an InfiniteList component which utilises react-infinite-scroll-component. This allows to render only the items that are on the screen for much faster performance.
+UI implements a header which has buttons for each category available. Clicking a button renders a category component which then renders items to display. To render items fast, I have implemented an InfiniteList component which utilises [react-infinite-scroll-component](https://www.npmjs.com/package/react-infinite-scroll-component "react-infinite-scroll-component"). This allows to render only the items that are on the screen for much faster performance.
 
 ## Installation and development
 
