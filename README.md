@@ -2,7 +2,7 @@
 
 This repository contains my solution to Reaktor's bad-api-assignment for junior developer position (Summer 2021).
 
-## assignment
+## Assignment
 
 Assignment is to implement a web app for a clothing brands warehouse. From the app workers can check product availability per category. Client uses two legacy APIs where data for categories and manufacturers are stored.
 
@@ -17,6 +17,8 @@ For more detailed information check: https://www.reaktor.com/junior-dev-assignme
 ## My solution
 
 My solution consists of a front end and back end (proxy server). Front end makes requests to the proxy server and displays data it receives.
+
+You can check my solution at: (https://shielded-spire-25061.herokuapp.com)
 
 ### Proxy server
 
