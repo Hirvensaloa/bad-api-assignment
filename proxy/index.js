@@ -45,5 +45,10 @@ app.get('/categories/:category', (req, res) => {
 //When the server has been running for twenty seconds begin to update data. 
 setTimeout(tracker.update, 20000)
 
+const categories = ['beanies, facemasks, gloves']
+
+//Go through every category and fetch them. 
+categories.forEach(category => loader.fetchCategory(category))
+
 app.listen(PORT)
 logger.run(PORT)
