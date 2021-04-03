@@ -10,124 +10,101 @@ const config = require('./../utils/config')
 let manufacturerEtags = new Map()
 
 //Fetches data for given manufacturer. Returns a promise that if resolved contains APIs response data as json and etag.  
-const fetchManufacturer = (manufacturer) => {
+const fetchManufacturer = async (manufacturer) => {
 
     console.log('Fetching manufacturer: ' + manufacturer)
 
-    return new Promise( (resolve, reject) => {
+    try {
+        const response = await fetch(config.manufacturerUrl + manufacturer)
 
-        fetch(config.manufacturerUrl + manufacturer)
-            .then(response => {
-                response.json()
-                    .then((json) => {
-                        //If response is not an array, send new request. 
-                        if(!Array.isArray(json.response)) {
-                            
-                            fetchManufacturer(manufacturer)
-                                .then(data => resolve(data))
-                                .catch(err => reject(err)) 
+        const json = await response.json()
 
-                        } else {  //If succesful respond with data as json and etag.
-                            const etag = response.headers.get('etag')
-                            manufacturerEtags.set(manufacturer, etag) //Store etag to map.
+        //If response is not an array, send new request. 
+        if(!Array.isArray(json.response)) {
+            
+            try {
+                const data = await fetchManufacturer(manufacturer)
+                
+                return data
+            }
+            catch(err) {
+                logger.error(`Fetching manufacturer: ${manufacturer}`, err)
+            }
 
-                            resolve(
-                                {
-                                    etag: etag, 
-                                    json: json.response
-                                })
-                        }
-                    })
-                    .catch(err => {
-                        logger.error('Converting data to json', err)
-                        reject(err)
-                    })
-            })
-            .catch(err => {
-                logger.error(`Fetching manufacturer ${manufacturer}`, err)
-                reject(err)
-            })        
-    })  
+        } else {  //If succesful respond with data as json and etag.
+            const etag = response.headers.get('etag')
+            manufacturerEtags.set(manufacturer, etag) //Store etag to map.
+
+            return(
+                {
+                    etag: etag, 
+                    json: json.response
+                })
+        }
+    }
+    catch(err) {
+        logger.error(`Fetching manufacturer ${manufacturer}`, err)
+    }        
 }
 
 //Fetches items for a given category. Return a promise, containing item data, when the data is parsed and added to map. 
-const fetchCategory = (category) => {
+const fetchCategory = async (category) => {
 
     logger.info(`Fetching category: ${category}`)
 
-        return new Promise( (resolve, reject) => {
-        
-            fetch(config.categoryUrl + category)
-                .then(response => response.json())
-                .then(json => { 
-                    parse(json)
-                        .then(data => {
-                            container.addCategory(category, data)
+    try {
+        const response = await fetch(config.categoryUrl + category)
+        const json = await response.json()
 
-                            resolve(data)
-                        })
-                        .catch(err => {
-                            reject(err)
-                        })
-                })
-                .catch(err => {
-                    logger.error(`Fetching category: ${category}`, err)
-                    reject(err)
-                })
-        })
+        const data = await parse(json)
+        
+        container.addCategory(category, data)
+
+        return data 
+    } catch(err) {
+        logger.error(`Fetching category: ${category}`, err)
+    }
 
 }
 
 //Returns promise with items for a given category. 
-const getCategory = (category) => {
+const getCategory = async (category) => {
 
-    return new Promise( (resolve, reject) => {
+    if(container.categoryMap.has(category)) {
 
-        if(container.categoryMap.has(category)) {
+        return container.categoryMap.get(category)
 
-            resolve(container.categoryMap.get(category))
+    } else {
 
-        } else {
+        try {
+            const data = await fetchCategory(category)
 
-            fetchCategory(category)
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(err => {
-                    reject(err)
-                })
+            return data
+        } catch (err) {
+            logger.error("Error while fetching category", err)
         }
-    })
+    }
 }
 
 //Gets manufacturer data from fetchManufactuer and adds it to manufacturerMap. 
-const addManufacturerData = (manufacturer) => {
-
-    return new Promise((resolve, reject) => {
+const addManufacturerData = async (manufacturer) => {
 
         if(!container.manufacturerMap.has(manufacturer)){
 
-            fetchManufacturer(manufacturer)
-                .then(data => {
-                    container.addManufacturer(manufacturer, data.json)
-                    resolve()
-                })
-                .catch(err => {
-                    reject(err)
-                })
+            try {
+                const data = await fetchManufacturer(manufacturer)
+            
+                container.addManufacturer(manufacturer, data.json)
+            } catch(err) {
+                logger.error("Error while adding manufacturer data", err)
+            }
 
-        } else {
-            resolve()
-        }
-    })
-
+        } 
 }
 
 /*For parsing data, return array of items that contain id, name, manufacturer, color, price and availability.  
 Takes an array consisting of item data as parameter. */
-const parse = (data) => {
-
-    return new Promise( (resolve, reject) => {
+const parse = async (data) => {
 
         //Get all the different manufacturers that have no data in the container module. 
         let manufacturers = []
@@ -145,28 +122,20 @@ const parse = (data) => {
         }
 
         //When all manufacturers are obtained, parse data. 
-        Promise.all(promises)
-            .then(values => {
-                
-                for(i = 0; i < data.length; i++) {
+        await Promise.all(promises)
         
-                    const item = data[i]
-            
-                    //Checks if given item is in stock. 
-                    const instock = container.manufacturerMap.get(item.manufacturer).get(item.id)
-            
-                    data[i].availability = instock
-                }
+        for(i = 0; i < data.length; i++) {
+    
+            const item = data[i]
+    
+            //Checks if given item is in stock. 
+            const instock = container.manufacturerMap.get(item.manufacturer).get(item.id)
+    
+            data[i].availability = instock
+        }
 
-                resolve(data)
-
-            })
-            .catch(err => {
-                reject(err)
-            })
-
-    })
-
+        return data
+        
 }
 
 module.exports = {

@@ -10,7 +10,7 @@ const container = require('./containers')
 const update = () => {
 
     Promise.all(updateAllManufacturers())
-        .then((values) => {
+        .then(() => {
             logger.info('Manufacturers updated succesfully')
             setTimeout(update, 5000)
         })
@@ -41,24 +41,21 @@ const updateAllManufacturers = () => {
 
 /*Update a single manufacturer. Fetches data from the API and compares Etags. If etags don't match add data to container. 
 Returns a Promise which is resolved when data has been updated. */
-const updateManufacturer = (manufacturer) => {
+const updateManufacturer = async (manufacturer) => {
 
-    return new Promise((resolve, reject) => {
+        try {
+            const data = await loader.fetchManufacturer(manufacturer)
 
-        loader.fetchManufacturer(manufacturer)
-            .then(data => {
-                if(data.etag !== loader.manufacturerEtags.get(manufacturer)){
-                    container.addManufacturer(manufacturer, data.json)
-                    logger.info(`Noticed changes with manufacturer: ${manufacturer}`)
-                }
-                resolve()
-            })
-            .catch(err => {
+            if(data.etag !== loader.manufacturerEtags.get(manufacturer)){
+                container.addManufacturer(manufacturer, data.json)
+                logger.info(`Noticed changes with manufacturer: ${manufacturer}`)
+            }
+    
+        } 
+        catch(err) {
                 logger.error(`While updating manufacturer ${manufacturer}`)
-                reject(err)
-            })
+        }
 
-    })
 }
 
 
