@@ -6,7 +6,7 @@ const logger = require('./../utils/logger')
 let categoryMap = new Map()
 
 //Manufactures mapped to map that contains item id as key and item availability (boolean) as value. 
-let manufacturerMap = new Map( new Map() )
+let manufacturerMap = new Map()
 
 //Adds manufactures with given data to manufacturerMap. 
 const addManufacturer = (manufacturer, data) => {
@@ -15,7 +15,7 @@ const addManufacturer = (manufacturer, data) => {
 
     logger.info(`Adding manufacturer: ${manufacturer} to map with array size of: ${data.length}`)
 
-    for(i = 0; i < data.length; i++) {
+    for(let i = 0; i < data.length; i++) {
 
         //Check what string DATAPAYLOAD contains and determine availability of item. 
         const available = () => {
