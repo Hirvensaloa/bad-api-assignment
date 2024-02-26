@@ -18,8 +18,9 @@ For more detailed information check: https://www.reaktor.com/junior-dev-assignme
 
 My solution consists of a front end and back end (proxy server). Front end makes requests to the proxy server and displays data it receives.
 
-EDIT: My solution is no longer hosted
-You can check my solution at: (https://shielded-spire-25061.herokuapp.com). Note that the application period is now over and the APIs might be shutdown. Also the solution is quite slow in the beginning because it is no longer running constantly. 
+EDIT: My solution is no longer hosted.
+
+~You can check my solution at: (https://shielded-spire-25061.herokuapp.com). Note that the application period is now over and the APIs might be shutdown. Also the solution is quite slow in the beginning because it is no longer running constantly.~ 
 
 ### Proxy server
 
