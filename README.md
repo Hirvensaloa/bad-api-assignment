@@ -12,12 +12,13 @@ Assignment presents following problems:
 - Manufacturer API has built in an error case where it randomly responds with just '[]' as data. So the request has to be sent again.
 - There are around 18 000 products.
 
-For more detailed information check: https://www.reaktor.com/junior-dev-assignment/
+For more detailed information check: https://www.reaktor.com/junior-dev-assignment/ EDIT: No longer available :(
 
 ## My solution
 
 My solution consists of a front end and back end (proxy server). Front end makes requests to the proxy server and displays data it receives.
 
+EDIT: My solution is no longer hosted
 You can check my solution at: (https://shielded-spire-25061.herokuapp.com). Note that the application period is now over and the APIs might be shutdown. Also the solution is quite slow in the beginning because it is no longer running constantly. 
 
 ### Proxy server
